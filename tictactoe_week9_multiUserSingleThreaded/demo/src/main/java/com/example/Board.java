@@ -2,10 +2,36 @@ package com.example;
 
 public class Board {
     private int[][] grid;
-     public Board() {
+
+    // Default constructor
+    public Board() {
         grid = new int[3][3];
     }
-    // Formats the grid natively to a string rather than pushing it to an output stream
+
+    // New Constructor: Builds board from a stateless string (e.g., "0,1,2,0,0,0,0,0,0")
+    public Board(String stateStr) {
+        grid = new int[3][3];
+        String[] cells = stateStr.split(",");
+        int index = 0;
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                grid[i][j] = Integer.parseInt(cells[index++]);
+            }
+        }
+    }
+
+    // New Method: Converts current board into a string to send over network
+    public String serialize() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                sb.append(grid[i][j]).append(",");
+            }
+        }
+        return sb.toString().substring(0, sb.length() - 1);
+    }
+
+    // Existing methods remain unchanged
     public String getDisplayString() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < 3; i++) {
@@ -43,7 +69,6 @@ public class Board {
         if (grid[0][0] == mark && grid[1][1] == mark && grid[2][2] == mark) return true;
         if (grid[0][2] == mark && grid[1][1] == mark && grid[2][0] == mark) return true;
         return false;
-            
     }
 
     public void placeMark(int cell, int mark) {
@@ -51,4 +76,4 @@ public class Board {
         int col = (cell - 1) % 3;
         grid[row][col] = mark;
     }
-} 
+}
